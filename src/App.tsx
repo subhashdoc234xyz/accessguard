@@ -268,64 +268,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* Core Architecture Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="p-6 bg-white border border-slate-200 rounded-2xl hover:shadow-md hover:border-slate-300/80 transition-all duration-300 shadow-sm">
-                <div className="w-10 h-10 rounded-lg bg-indigo-50 border border-indigo-100/60 flex items-center justify-center mb-4">
-                  <Cpu className="w-5 h-5 text-indigo-600" />
-                </div>
-                <h3 className="text-lg font-semibold text-slate-800 mb-2">Multi-Agent Testing Engine</h3>
-                <p className="text-slate-500 text-sm leading-relaxed">
-                  Crawl pipelines scan pages dynamically, feeding structural DOM context to generative agents trained explicitly on WCAG standards.
-                </p>
-              </div>
 
-              <div className="p-6 bg-white border border-slate-200 rounded-2xl hover:shadow-md hover:border-slate-300/80 transition-all duration-300 shadow-sm">
-                <div className="w-10 h-10 rounded-lg bg-emerald-550/10 bg-emerald-50 border border-emerald-100/60 flex items-center justify-center mb-4">
-                  <FileCheck2 className="w-5 h-5 text-emerald-600" />
-                </div>
-                <h3 className="text-lg font-semibold text-slate-800 mb-2">UiPath Test Cloud</h3>
-                <p className="text-slate-500 text-sm leading-relaxed">
-                  Automated test suites map findings directly into UiPath Test Manager, standardizing continuous delivery validation workflows.
-                </p>
-              </div>
-
-              <div className="p-6 bg-white border border-slate-200 rounded-2xl hover:shadow-md hover:border-slate-300/80 transition-all duration-300 shadow-sm">
-                <div className="w-10 h-10 rounded-lg bg-indigo-50 border border-indigo-100/60 flex items-center justify-center mb-4">
-                  <UserCheck className="w-5 h-5 text-indigo-600" />
-                </div>
-                <h3 className="text-lg font-semibold text-slate-800 mb-2">Human-In-The-Loop Maestro</h3>
-                <p className="text-slate-500 text-sm leading-relaxed">
-                  Remediation fixes are queued as secure interactive cards in UiPath Maestro (Action Center), guarding product integrity at release.
-                </p>
-              </div>
-            </div>
-
-            {/* Step-by-Step Interactive Timeline */}
-            <div className="p-8 bg-white border border-slate-200 rounded-2xl max-w-5xl mx-auto shadow-sm">
-              <h2 className="text-xl font-bold text-slate-850 mb-8 text-center flex items-center justify-center gap-2">
-                <Globe className="w-5 h-5 text-indigo-600" />
-                How the Agent System Executes Compliance Testing
-              </h2>
-
-              <div className="grid grid-cols-1 md:grid-cols-5 gap-6 text-center">
-                {[
-                  { num: "01", title: "Crawl Domain", desc: "Scan HTML structural element catalogs and metadata paths." },
-                  { num: "02", title: "Gemini Analysis", desc: "Wrangle DOM data to design precise WCAG 2.2 test cases." },
-                  { num: "03", title: "Test Cloud Exec", desc: "Map with UiPath Automation to trigger safe testing cycles." },
-                  { num: "04", title: "Code Remediation", desc: "Generate standards-compliant code patches via Gemini AI." },
-                  { num: "05", title: "Maestro Approve", desc: "Review, approve, and auto-apply patches safely." },
-                ].map((step, idx) => (
-                  <div key={idx} className="space-y-3 relative">
-                    <div className="w-12 h-12 rounded-full border border-slate-200 bg-slate-50 flex items-center justify-center text-indigo-600 font-bold text-sm mx-auto shadow-inner">
-                      {step.num}
-                    </div>
-                    <h3 className="text-sm font-semibold text-slate-800">{step.title}</h3>
-                    <p className="text-[11px] text-slate-500 leading-normal">{step.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
           </motion.div>
         )}
 
