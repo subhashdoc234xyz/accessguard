@@ -7,7 +7,6 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Globe,
-  Gauge,
   Cpu,
   FileCheck2,
   Shield,
@@ -37,12 +36,12 @@ export default function App() {
   const [view, setView] = useState<"home" | "scanning" | "dashboard">("home");
   const [selectedTestCase, setSelectedTestCase] = useState<TestCase | null>(null);
   const [approvedPlans, setApprovedPlans] = useState<Record<string, boolean>>({});
-  const [activeTab, setActiveTab] = useState<"violations" | "remediation" | "architecture">("violations");
+  const [activeTab, setActiveTab] = useState<"violations" | "remediation">("violations");
 
   // Sample quick URLs to quickly prefill
   const QUICK_URLS = [
     { label: "Acme Enterprise ERP", url: "https://acme-corporate-dashboard.internal" },
-    { label: "Team Xeno Finance Console", url: "https://xenofin.act.edu.in" },
+    { label: "FinOps Console", url: "https://finops-console.example.com" },
     { label: "Gov Portal (Beta)", url: "https://beta-government-portal.nic.in" }
   ];
 
@@ -176,16 +175,13 @@ export default function App() {
             </div>
             <div>
               <span className="font-semibold tracking-tight text-slate-900 text-lg block">AccessGuard</span>
-              <span className="text-[10px] font-mono tracking-wider text-slate-500 uppercase">UiPath Test Cloud Agent</span>
+              <span className="text-[10px] font-mono tracking-wider text-slate-500 uppercase">Accessibility Compliance Platform</span>
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <span className="hidden md:inline-block px-3 py-1 rounded-full bg-slate-100 text-slate-600 font-mono text-[10px] border border-slate-200">
-              TRACK 3: TEST CLOUD DEMO
-            </span>
             <div className="flex items-center gap-1.5 text-xs text-slate-600 font-medium bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-100 shadow-2xs">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              Agent Systems Operational
+              Systems Operational
             </div>
           </div>
         </div>
@@ -205,7 +201,7 @@ export default function App() {
             <div className="text-center max-w-4xl mx-auto space-y-6">
               <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50 border border-indigo-100/80 text-indigo-600 text-xs font-semibold mb-3">
                 <Zap className="w-3.5 h-3.5" />
-                UiPath AgentHack 2026 Submission
+                AI-Powered WCAG 2.2 Compliance Engine
               </span>
               <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-slate-900 leading-tight">
                 Autonomous Accessibility Assurance for <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-indigo-600 to-indigo-800 font-extrabold">Enterprise Web Apps</span>
@@ -255,7 +251,7 @@ export default function App() {
 
               {/* Quick Preset Buttons */}
               <div className="flex flex-wrap items-center justify-center gap-3 pt-2 text-xs">
-                <span className="text-slate-400 font-bold uppercase font-mono tracking-wider">Demo Datasets:</span>
+                <span className="text-slate-400 font-bold uppercase font-mono tracking-wider">Quick Start:</span>
                 {QUICK_URLS.map((pref, i) => (
                   <button
                     key={i}
@@ -622,19 +618,7 @@ export default function App() {
                 }`}
               >
                 <Cpu className="w-4 h-4 text-indigo-500" />
-                Gemini AI Remediation Studio
-              </button>
-
-              <button
-                onClick={() => setActiveTab("architecture")}
-                className={`py-3 px-1.5 text-sm font-semibold tracking-tight border-b-2 transition flex items-center gap-2 cursor-pointer ${
-                  activeTab === "architecture"
-                    ? "border-indigo-600 text-indigo-600 font-bold"
-                    : "border-transparent text-slate-500 hover:text-slate-850"
-                }`}
-              >
-                <Gauge className="w-4 h-4 text-indigo-550 text-indigo-505 text-indigo-500" />
-                Agentic Architecture Roadmap
+                AI Remediation Studio
               </button>
             </div>
 
@@ -857,101 +841,15 @@ export default function App() {
               </div>
             )}
 
-            {/* TAB CONTENT: ARCHITECTURE ROADMAP */}
-            {activeTab === "architecture" && (
-              <div className="space-y-8 bg-white border border-slate-200 rounded-3xl p-8 shadow-sm">
-                <div>
-                  <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2 mb-2">
-                    <Zap className="w-5 h-5 text-indigo-600" />
-                    AccessGuard Agent System Blueprint — Subhash Boopathi (Team Xeno)
-                  </h3>
-                  <p className="text-sm text-slate-500 max-w-3xl leading-relaxed">
-                    Designed to eliminate legal liability and visual barriers continuously and autonomously.
-                  </p>
-                </div>
 
-                {/* ASCII Art block */}
-                <div className="bg-slate-50 border border-slate-250/60 border-slate-200 p-5 rounded-2xl shadow-2xs">
-                  <pre className="font-mono text-[10px] md:text-xs text-indigo-600/90 leading-relaxed overflow-x-auto whitespace-pre">
-{`   [ USER INPUT ]
-          │
-          ▼
-   ┌──────────────┐
-   │ Agent 01     │ ───► Crawls webpage hierarchies, extracts images, buttons,
-   │ Crawler      │      heading flows, form controls and raw structural tags.
-   └──────┬───────┘
-          │
-          ▼
-   ┌──────────────┐
-   │ Agent 02     │ ───► Feeds target catalog details to Gemini 3.5 Flash to automatically
-   │ Test Creator │      define specific, reproducible WCAG 2.2 criteria test cases.
-   └──────┬───────┘
-          │
-          ▼
-   ┌──────────────┐
-   │ UiPath       │ ───► Deploys dynamic test case assets to Test Cloud Manager to
-   │ Test Cloud   │      verify form inputs and custom component attributes programmatically.
-   └──────┬───────┘
-          │
-          ▼
-   ┌──────────────┐
-   │ Agent 03     │ ───► Invokes Gemini Generative parameters to automatically produce side-to-side
-   │ Remediation  │      comprehensive JSX and HTML replacement code patches.
-   └──────┬───────┘
-          │
-          ▼
-   ┌──────────────┐
-   │ Automation   │ ───► Integrates with Action Center interfaces via Orchestrator API for
-   │ Maestro HITL │      approval before commiting changes and exporting compliance certifications.
-   └──────────────┘`}
-                  </pre>
-                </div>
-
-                {/* WCAG details block */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="p-5 bg-slate-50/50 border border-slate-200 rounded-xl space-y-3 shadow-3xs">
-                    <h4 className="text-xs font-bold font-mono tracking-wider text-slate-400 uppercase">UiPath Test Cloud Features Utilized</h4>
-                    <ul className="text-xs text-slate-600 space-y-2.5 list-disc list-inside">
-                      <li><strong>Test Cloud Manager:</strong> Captures and groups test cases cleanly.</li>
-                      <li><strong>UiPath Maestro Action Center:</strong> Delivers secure interactive feedback cards.</li>
-                      <li><strong>External Application OAuth APIs:</strong> Facilitates standard headless deployments.</li>
-                    </ul>
-                  </div>
-
-                  <div className="p-5 bg-slate-50/50 border border-slate-200 rounded-xl space-y-3 shadow-3xs">
-                    <h4 className="text-xs font-bold font-mono tracking-wider text-slate-400 uppercase font-mono">Track Specs</h4>
-                    <table className="w-full text-xs text-slate-600">
-                      <tbody>
-                        <tr className="border-b border-slate-200/80">
-                          <td className="py-2.5">User:</td>
-                          <td className="py-2.5 text-slate-800 font-semibold text-right">Subhash Boopathi (Team Xeno)</td>
-                        </tr>
-                        <tr className="border-b border-slate-200/80">
-                          <td className="py-2.5">Track:</td>
-                          <td className="py-2.5 text-slate-800 font-semibold text-right">Track 3: Test Cloud</td>
-                        </tr>
-                        <tr className="border-b border-slate-200/80">
-                          <td className="py-2.5">Engine Version:</td>
-                          <td className="py-2.5 text-slate-800 font-semibold text-right">WCAG 2.2 AA Compliant Standards</td>
-                        </tr>
-                        <tr>
-                          <td className="py-2.5">Models:</td>
-                          <td className="py-2.5 text-slate-800 font-semibold text-right">Gemini 2.5/3.5 Flash Model Series</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            )}
           </motion.div>
         )}
       </main>
 
       {/* Elegant Footer area */}
       <footer className="border-t border-slate-200 bg-white py-12 text-center text-slate-500 text-xs mt-16 max-w-full">
-        <p>&copy; 2026 AccessGuard. Designed by Subhash Boopathi — Team Xeno, Arjun College of Technology.</p>
-        <p className="mt-1 font-mono text-[10px] text-slate-400">UiPath AgentHack Track 3: Test Cloud | Powered by Google Gemini 3.5 Flash API</p>
+        <p>&copy; 2026 AccessGuard. All rights reserved.</p>
+        <p className="mt-1 font-mono text-[10px] text-slate-400">Autonomous WCAG 2.2 Compliance Engine — Powered by AI</p>
       </footer>
     </div>
   );
