@@ -522,3 +522,73 @@ body {
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
 }
+
+/* ---- Pipeline Monitor (Black Terminal Style) ---- */
+.terminal-pipeline {
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  position: relative;
+}
+
+.terminal-pipeline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 28px;
+  background: #161b22;
+  border-bottom: 1px solid #30363d;
+  border-radius: 12px 12px 0 0;
+  pointer-events: none;
+}
+
+.terminal-pipeline .terminal-dots {
+  position: absolute;
+  top: 9px;
+  left: 12px;
+  display: flex;
+  gap: 6px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.terminal-pipeline .terminal-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: block;
+}
+
+.terminal-pipeline .terminal-dots .dot-red {
+  background: #ff5f56;
+}
+
+.terminal-pipeline .terminal-dots .dot-yellow {
+  background: #ffbd2e;
+}
+
+.terminal-pipeline .terminal-dots .dot-green {
+  background: #27c93f;
+}
+
+/* Terminal dark scrollbar */
+.terminal-pipeline ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.terminal-pipeline ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.terminal-pipeline ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 3px;
+}
+
+.terminal-pipeline ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}

@@ -441,36 +441,41 @@ function MainApp() {
             </div>
 
             {/* Agent Live logs console */}
-            <div className="terminal-block p-5 animate-scale-in">
-              <div className="flex justify-between items-center pb-3 border-b border-slate-200/60 mb-3 text-xs">
-                <span className="font-mono text-[#475569] flex items-center gap-1.5 font-bold">
-                  <Terminal className="w-4 h-4 text-emerald-500" />
+            <div className="terminal-pipeline p-5 animate-scale-in">
+              <div className="terminal-dots">
+                <span className="dot-red" />
+                <span className="dot-yellow" />
+                <span className="dot-green" />
+              </div>
+              <div className="flex justify-between items-center pb-3 border-b border-[#30363d] mb-3 text-xs pt-1">
+                <span className="font-mono text-[#e6edf3] flex items-center gap-1.5 font-bold">
+                  <Terminal className="w-4 h-4 text-emerald-400" />
                   AGENTS PIPELINE MONITOR
                 </span>
-                <span className="font-mono text-[#94a3b8]">JOB_ID: {jobState?.job_id}</span>
+                <span className="font-mono text-[#8b949e]">JOB_ID: {jobState?.job_id}</span>
               </div>
-              <div className="font-mono text-[11px] text-[#64748b] space-y-2 h-44 overflow-y-auto">
-                <p className="text-[#94a3b8]">[SYSTEM] AccessGuard environment initialized.</p>
-                <p className="text-[#94a3b8]">[SYSTEM] API connection to cloud.uipath.com verified.</p>
+              <div className="font-mono text-[11px] text-[#c9d1d9] space-y-2 h-44 overflow-y-auto ">
+                <p className="text-[#8b949e]">[SYSTEM] AccessGuard environment initialized.</p>
+                <p className="text-[#8b949e]">[SYSTEM] API connection to cloud.uipath.com verified.</p>
                 {jobState?.pages_crawled ? (
                   <>
-                    <p className="text-emerald-600">[CRAWLER] Initiated fetch routine for target: {jobState.url}</p>
-                    <p className="text-emerald-600">[CRAWLER] Scanned {jobState.pages_crawled} pages recursively.</p>
+                    <p className="text-emerald-400">[CRAWLER] Initiated fetch routine for target: {jobState.url}</p>
+                    <p className="text-emerald-400">[CRAWLER] Scanned {jobState.pages_crawled} pages recursively.</p>
                   </>
                 ) : null}
                 {jobState?.status === "generating_tests" && (
-                  <p className="text-blue-600 animate-pulse">[GEMINI_AI] Processing HTML elements of indexed DOM. Aligning WCAG 2.2 standards...</p>
+                  <p className="text-[#58a6ff] animate-pulse">[GEMINI_AI] Processing HTML elements of indexed DOM. Aligning WCAG 2.2 standards...</p>
                 )}
                 {jobState?.status === "executing" && (
                   <>
-                    <p className="text-pink-600">[UIPATH_MGMT] Synchronized secure suite with UiPath Test Manager.</p>
-                    <p className="text-pink-600 animate-pulse">[UIPATH_EXEC] Triggered automated client environment audits. Assessing contrast and ARIA labels...</p>
+                    <p className="text-[#f778ba]">[UIPATH_MGMT] Synchronized secure suite with UiPath Test Manager.</p>
+                    <p className="text-[#f778ba] animate-pulse">[UIPATH_EXEC] Triggered automated client environment audits. Assessing contrast and ARIA labels...</p>
                   </>
                 )}
                 {jobState?.status === "remediating" && (
-                  <p className="text-blue-600 animate-pulse">[GEMINI_AI] Formulating correction patches. Aligning components & state properties...</p>
+                  <p className="text-[#58a6ff] animate-pulse">[GEMINI_AI] Formulating correction patches. Aligning components & state properties...</p>
                 )}
-                <p className="text-[#94a3b8]">[SYSTEM] Monitoring active state variables...</p>
+                <p className="text-[#8b949e]">[SYSTEM] Monitoring active state variables...</p>
               </div>
             </div>
           </motion.div>
