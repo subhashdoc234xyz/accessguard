@@ -38,13 +38,6 @@ export default function App() {
   const [approvedPlans, setApprovedPlans] = useState<Record<string, boolean>>({});
   const [activeTab, setActiveTab] = useState<"violations" | "remediation">("violations");
 
-  // Sample quick URLs to quickly prefill
-  const QUICK_URLS = [
-    { label: "Acme Enterprise ERP", url: "https://acme-corporate-dashboard.internal" },
-    { label: "FinOps Console", url: "https://finops-console.example.com" },
-    { label: "Gov Portal (Beta)", url: "https://beta-government-portal.nic.in" }
-  ];
-
   // Poll job status while scan is running
   useEffect(() => {
     if (!currentJobId || view !== "scanning") return;
@@ -346,7 +339,7 @@ ${conclusion}
                 Autonomous Accessibility Assurance for <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-indigo-600 to-indigo-800 font-extrabold">Enterprise Web Apps</span>
               </h1>
               <p className="text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
-                AccessGuard is a continuous agentic compliance engine. It crawls enterprise apps, uses Gemini 3.5 Flash to generate WCAG 2.2 test cases, triggers UiPath Test Cloud audits, and publishes remediation fixes with human-in-the-loop review.
+                AccessGuard is a continuous agentic compliance engine. It crawls enterprise apps, uses Gemini 2.5 Flash to generate WCAG 2.2 test cases, triggers UiPath Test Cloud audits, and publishes remediation fixes with human-in-the-loop review.
               </p>
 
               {/* Error Callout */}
@@ -388,23 +381,6 @@ ${conclusion}
                 </div>
               </div>
 
-              {/* Quick Preset Buttons */}
-              <div className="flex flex-wrap items-center justify-center gap-3 pt-2 text-xs">
-                <span className="text-slate-400 font-bold uppercase font-mono tracking-wider">Quick Start:</span>
-                {QUICK_URLS.map((pref, i) => (
-                  <button
-                    key={i}
-                    onClick={() => {
-                      setUrlInput(pref.url);
-                      handleStartScan(pref.url);
-                    }}
-                    className="px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 hover:border-slate-300 transition-all border border-slate-200 text-slate-700 font-medium flex items-center gap-1.5 cursor-pointer shadow-xs"
-                  >
-                    <Terminal className="w-3.5 h-3.5 text-indigo-500" />
-                    {pref.label}
-                  </button>
-                ))}
-              </div>
             </div>
 
 
