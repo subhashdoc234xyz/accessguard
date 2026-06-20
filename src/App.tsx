@@ -4,28 +4,24 @@
  */
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import {
   Globe,
   Cpu,
-  FileCheck2,
   Shield,
   ArrowRight,
   Loader2,
   CheckCircle2,
   AlertTriangle,
   FileDown,
-  RefreshCw,
   Terminal,
   ExternalLink,
-  ChevronRight,
-  Eye,
   Check,
   Zap,
   RotateCcw,
   UserCheck
 } from "lucide-react";
-import { ScanResult, TestCase, RemediationPlan, JobStatus } from "./types";
+import { ScanResult, TestCase } from "./types";
 
 export default function App() {
   const [urlInput, setUrlInput] = useState("");
@@ -268,8 +264,8 @@ export default function App() {
               <Shield className="w-5 h-5 text-white" />
             </div>
             <div>
-              <span className="font-semibold tracking-tight text-white text-lg block">AccessGuard</span>
-              <span className="text-[10px] font-mono tracking-wider text-white/50 uppercase">Accessibility Compliance Platform</span>
+              <span className="font-semibold tracking-tight text-[#1e40af] text-lg block">AccessGuard</span>
+              <span className="text-[10px] font-mono tracking-wider text-[#64748b] uppercase">Accessibility Compliance Platform</span>
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -293,21 +289,21 @@ export default function App() {
           >
             {/* Hero Launch Area */}
             <div className="text-center max-w-4xl mx-auto space-y-6 animate-fade-in-up">
-              <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass border-blue-500/20 text-blue-400 text-xs font-semibold mb-3">
+              <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass border-blue-500/20 text-blue-600 text-xs font-semibold mb-3">
                 <Zap className="w-3.5 h-3.5" />
                 AI-Powered WCAG 2.2 Compliance Engine
               </span>
-              <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white leading-tight">
-                Autonomous Accessibility Assurance for <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-blue-300 to-cyan-300 font-extrabold">Enterprise Web Apps</span>
+              <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-[#1e293b] leading-tight">
+                Autonomous Accessibility Assurance for <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-500 font-extrabold">Enterprise Web Apps</span>
               </h1>
-              <p className="text-base text-white/60 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-base text-[#64748b] max-w-2xl mx-auto leading-relaxed">
                 AccessGuard is a continuous agentic compliance engine. It crawls enterprise apps, uses Gemini 2.5 Flash to generate WCAG 2.2 test cases, triggers UiPath Test Cloud audits, and publishes remediation fixes with human-in-the-loop review.
               </p>
 
               {/* Error Callout */}
               {errorText && (
-                <div className="p-4 glass border-red-500/20 rounded-xl max-w-xl mx-auto text-red-400 text-sm flex items-center gap-3">
-                  <AlertTriangle className="w-5 h-5 text-red-400 flex-shrink-0" />
+                <div className="p-4 glass border-red-500/30 rounded-xl max-w-xl mx-auto text-red-600 text-sm flex items-center gap-3">
+                  <AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0" />
                   <span>{errorText}</span>
                 </div>
               )}
@@ -316,11 +312,11 @@ export default function App() {
               <div className="glass p-2.5 rounded-2xl max-w-2xl mx-auto">
                 <div className="flex flex-col sm:flex-row gap-2">
                   <div className="glass-input flex-grow flex items-center gap-3 px-4">
-                    <Globe className="w-5 h-5 text-white/40" />
+                    <Globe className="w-5 h-5 text-[#94a3b8]" />
                     <input
                       type="text"
                       placeholder="Enter target enterprise app URL (e.g., https://my-erp.acme.com)..."
-                      className="bg-transparent border-none outline-none py-3.5 text-white placeholder-white/40 text-sm w-full"
+                      className="bg-transparent border-none outline-none py-3.5 text-[#1e293b] placeholder-[#94a3b8] text-sm w-full"
                       value={urlInput}
                       onChange={(e) => setUrlInput(e.target.value)}
                       onKeyDown={(e) => e.key === "Enter" && handleStartScan(urlInput)}
@@ -359,13 +355,13 @@ export default function App() {
           >
             {/* Top scanning card */}
             <div className="text-center space-y-4 animate-fade-in-up">
-              <h1 className="text-3xl font-bold tracking-tight text-white flex items-center justify-center gap-3">
-                <Loader2 className="w-7 h-7 text-blue-400 animate-spin" />
+              <h1 className="text-3xl font-bold tracking-tight text-[#1e293b] flex items-center justify-center gap-3">
+                <Loader2 className="w-7 h-7 text-blue-500 animate-spin" />
                 Assembling Compliance Agents
               </h1>
-              <p className="text-white/50 text-sm max-w-lg mx-auto leading-relaxed">
+              <p className="text-[#64748b] text-sm max-w-lg mx-auto leading-relaxed">
                 Coordinating autonomous modules to perform full accessibility checks on{" "}
-                <span className="text-blue-400 font-mono text-xs bg-white/10 border border-white/10 px-2 py-1 rounded">{jobState?.url}</span>
+                <span className="text-blue-600 font-mono text-xs bg-white/60 border border-blue-200/60 px-2 py-1 rounded">{jobState?.url}</span>
               </p>
             </div>
 
@@ -405,40 +401,40 @@ export default function App() {
                   const currentIndex = states.indexOf(jobState?.status || "crawling");
                   const elementIndex = states.indexOf(s.stage);
 
-                  let statusIcon = <div className="w-6 h-6 rounded-full border border-white/10 bg-white/5 flex-shrink-0" />;
-                  let textStyle = "text-white/40";
-                  let descStyle = "text-white/40";
+                  let statusIcon = <div className="w-6 h-6 rounded-full border border-slate-200 bg-white/60 flex-shrink-0" />;
+                  let textStyle = "text-[#64748b]";
+                  let descStyle = "text-[#64748b]";
 
                   if (elementIndex < currentIndex) {
                     // Completed Step
                     statusIcon = (
-                      <div className="w-6 h-6 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 flex items-center justify-center flex-shrink-0 shadow-sm shadow-emerald-500/10">
+                      <div className="w-6 h-6 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-600 flex items-center justify-center flex-shrink-0 shadow-sm">
                         <CheckCircle2 className="w-4 h-4" />
                       </div>
                     );
-                    textStyle = "text-white/60";
-                    descStyle = "text-white/40";
+                    textStyle = "text-[#475569]";
+                    descStyle = "text-[#64748b]";
                   } else if (elementIndex === currentIndex) {
                     // Active Step
                     statusIcon = (
-                      <div className="w-6 h-6 rounded-full bg-blue-600/30 border border-blue-500/40 text-blue-400 flex items-center justify-center flex-shrink-0 animate-pulse shadow-sm shadow-blue-500/20">
+                      <div className="w-6 h-6 rounded-full bg-blue-100 border border-blue-300 text-blue-600 flex items-center justify-center flex-shrink-0 animate-pulse shadow-sm">
                         <Loader2 className="w-4 h-4 animate-spin" />
                       </div>
                     );
-                    textStyle = "text-white font-semibold";
-                    descStyle = "text-white/60";
+                    textStyle = "text-[#1e293b] font-semibold";
+                    descStyle = "text-[#475569]";
                   } else {
                     statusIcon = (
-                      <div className="w-6 h-6 rounded-full border border-white/10 bg-white/5 flex items-center justify-center flex-shrink-0 text-white/30 font-mono text-[10px] font-bold">
+                      <div className="w-6 h-6 rounded-full border border-slate-200 bg-white/60 flex items-center justify-center flex-shrink-0 text-[#94a3b8] font-mono text-[10px] font-bold">
                         {index + 1}
                       </div>
                     );
-                    textStyle = "text-white/40";
-                    descStyle = "text-white/40";
+                    textStyle = "text-[#64748b]";
+                    descStyle = "text-[#64748b]";
                   }
 
                   return (
-                    <div key={index} className="flex gap-4 items-start border-b border-white/5 pb-5 last:border-0 last:pb-0">
+                    <div key={index} className="flex gap-4 items-start border-b border-slate-200/50 pb-5 last:border-0 last:pb-0">
                       {statusIcon}
                       <div className="space-y-1">
                         <h4 className={`text-sm ${textStyle}`}>{s.label}</h4>
@@ -452,35 +448,35 @@ export default function App() {
 
             {/* Agent Live logs console */}
             <div className="terminal-block p-5 animate-scale-in">
-              <div className="flex justify-between items-center pb-3 border-b border-white/10 mb-3 text-xs">
-                <span className="font-mono text-white/70 flex items-center gap-1.5 font-bold">
-                  <Terminal className="w-4 h-4 text-emerald-400" />
+              <div className="flex justify-between items-center pb-3 border-b border-slate-200/60 mb-3 text-xs">
+                <span className="font-mono text-[#475569] flex items-center gap-1.5 font-bold">
+                  <Terminal className="w-4 h-4 text-emerald-500" />
                   AGENTS PIPELINE MONITOR
                 </span>
-                <span className="font-mono text-white/40">JOB_ID: {jobState?.job_id}</span>
+                <span className="font-mono text-[#94a3b8]">JOB_ID: {jobState?.job_id}</span>
               </div>
-              <div className="font-mono text-[11px] text-white/50 space-y-2 h-44 overflow-y-auto">
-                <p className="text-white/40">[SYSTEM] AccessGuard environment initialized.</p>
-                <p className="text-white/40">[SYSTEM] API connection to cloud.uipath.com verified.</p>
+              <div className="font-mono text-[11px] text-[#64748b] space-y-2 h-44 overflow-y-auto">
+                <p className="text-[#94a3b8]">[SYSTEM] AccessGuard environment initialized.</p>
+                <p className="text-[#94a3b8]">[SYSTEM] API connection to cloud.uipath.com verified.</p>
                 {jobState?.pages_crawled ? (
                   <>
-                    <p className="text-emerald-400">[CRAWLER] Initiated fetch routine for target: {jobState.url}</p>
-                    <p className="text-emerald-400">[CRAWLER] Scanned {jobState.pages_crawled} pages recursively.</p>
+                    <p className="text-emerald-600">[CRAWLER] Initiated fetch routine for target: {jobState.url}</p>
+                    <p className="text-emerald-600">[CRAWLER] Scanned {jobState.pages_crawled} pages recursively.</p>
                   </>
                 ) : null}
                 {jobState?.status === "generating_tests" && (
-                  <p className="text-blue-400 animate-pulse">[GEMINI_AI] Processing HTML elements of indexed DOM. Aligning WCAG 2.2 standards...</p>
+                  <p className="text-blue-600 animate-pulse">[GEMINI_AI] Processing HTML elements of indexed DOM. Aligning WCAG 2.2 standards...</p>
                 )}
                 {jobState?.status === "executing" && (
                   <>
-                    <p className="text-pink-400">[UIPATH_MGMT] Synchronized secure suite with UiPath Test Manager.</p>
-                    <p className="text-pink-400 animate-pulse">[UIPATH_EXEC] Triggered automated client environment audits. Assessing contrast and ARIA labels...</p>
+                    <p className="text-pink-600">[UIPATH_MGMT] Synchronized secure suite with UiPath Test Manager.</p>
+                    <p className="text-pink-600 animate-pulse">[UIPATH_EXEC] Triggered automated client environment audits. Assessing contrast and ARIA labels...</p>
                   </>
                 )}
                 {jobState?.status === "remediating" && (
-                  <p className="text-blue-400 animate-pulse">[GEMINI_AI] Formulating correction patches. Aligning components & state properties...</p>
+                  <p className="text-blue-600 animate-pulse">[GEMINI_AI] Formulating correction patches. Aligning components & state properties...</p>
                 )}
-                <p className="text-white/40">[SYSTEM] Monitoring active state variables...</p>
+                <p className="text-[#94a3b8]">[SYSTEM] Monitoring active state variables...</p>
               </div>
             </div>
           </motion.div>
@@ -495,18 +491,18 @@ export default function App() {
             className="space-y-10"
           >
             {/* Top metadata context */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/10 pb-6 animate-fade-in">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-200/60 pb-6 animate-fade-in">
               <div>
-                <span className="text-[10px] uppercase font-mono tracking-wider font-semibold text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded border border-blue-500/20">
+                <span className="text-[10px] uppercase font-mono tracking-wider font-semibold text-blue-600 bg-blue-100/60 px-2.5 py-1 rounded border border-blue-200/60">
                   Compliance Audit Dashboard
                 </span>
-                <h1 className="text-2xl font-bold text-white mt-2 flex items-center gap-2">
+                <h1 className="text-2xl font-bold text-[#1e293b] mt-2 flex items-center gap-2">
                   {new URL(jobState.url).hostname}
-                  <a href={jobState.url} target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-blue-400 transition">
+                  <a href={jobState.url} target="_blank" rel="noopener noreferrer" className="text-[#94a3b8] hover:text-blue-600 transition">
                     <ExternalLink className="w-4 h-4" />
                   </a>
                 </h1>
-                <p className="text-xs text-white/50 mt-1">
+                <p className="text-xs text-[#64748b] mt-1">
                   Scanned on {new Date(jobState.created_at).toLocaleString()} | {jobState.pages_crawled} pages analyzed
                 </p>
               </div>
@@ -515,7 +511,7 @@ export default function App() {
               <div className="flex flex-wrap items-center gap-2">
                 <button
                   onClick={downloadHTMLReport}
-                  className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-xl px-4 py-2.5 text-xs font-semibold tracking-wide transition-all duration-300 shadow-lg shadow-blue-500/20 flex items-center gap-2 cursor-pointer hover:translate-y-[-1px]"
+                  className="btn-html px-4 py-2.5 text-xs tracking-wide flex items-center gap-2"
                 >
                   <FileDown className="w-4 h-4" />
                   ⬇ DOWNLOAD HTML REPORT
@@ -533,7 +529,7 @@ export default function App() {
                     setUrlInput("");
                     setCurrentJobId(null);
                   }}
-                  className="glass text-white/70 hover:text-white rounded-xl px-4 py-2.5 text-xs font-semibold transition-all duration-300 flex items-center gap-1.5 cursor-pointer hover:bg-white/10"
+                  className="glass text-[#475569] hover:text-[#1e293b] rounded-xl px-4 py-2.5 text-xs font-semibold transition-all duration-200 flex items-center gap-1.5 cursor-pointer"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                   AUDIT NEW DOMAIN
@@ -545,7 +541,7 @@ export default function App() {
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
               {/* Score Chart Card */}
               <div className="glass p-6 flex flex-col items-center justify-center text-center relative overflow-hidden animate-scale-in">
-                <span className="text-xs font-bold text-white/50 uppercase tracking-wider mb-4">WCAG Compliance index</span>
+                <span className="text-xs font-bold text-[#64748b] uppercase tracking-wider mb-4">WCAG Compliance index</span>
 
                 {/* Donut SVG */}
                 <div className="relative w-36 h-36 flex items-center justify-center">
@@ -572,17 +568,17 @@ export default function App() {
                     />
                   </svg>
                   <div className="absolute text-center">
-                    <span className="text-4xl font-extrabold text-white">{jobState.wcag_score}</span>
-                    <span className="text-[10px] text-white/40 block font-semibold font-mono tracking-wider">/ 100</span>
+                    <span className="text-4xl font-extrabold text-[#1e293b]">{jobState.wcag_score}</span>
+                    <span className="text-[10px] text-[#64748b] block font-semibold font-mono tracking-wider">/ 100</span>
                   </div>
                 </div>
 
                 <span
                   className="mt-6 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider border transition-colors"
                   style={{
-                    backgroundColor: jobState.wcag_score >= 90 ? "rgba(16, 185, 129, 0.15)" : jobState.wcag_score >= 70 ? "rgba(245, 158, 11, 0.15)" : "rgba(239, 68, 68, 0.15)",
-                    color: jobState.wcag_score >= 90 ? "#10b981" : jobState.wcag_score >= 70 ? "#f59e0b" : "#ef4444",
-                    borderColor: jobState.wcag_score >= 90 ? "rgba(16, 185, 129, 0.4)" : jobState.wcag_score >= 70 ? "rgba(245, 158, 11, 0.4)" : "rgba(239, 68, 68, 0.4)",
+                    backgroundColor: jobState.wcag_score >= 90 ? "rgba(16, 185, 129, 0.1)" : jobState.wcag_score >= 70 ? "rgba(245, 158, 11, 0.1)" : "rgba(239, 68, 68, 0.1)",
+                    color: jobState.wcag_score >= 90 ? "#059669" : jobState.wcag_score >= 70 ? "#d97706" : "#dc2626",
+                    borderColor: jobState.wcag_score >= 90 ? "rgba(16, 185, 129, 0.25)" : jobState.wcag_score >= 70 ? "rgba(245, 158, 11, 0.25)" : "rgba(239, 68, 68, 0.25)",
                   }}
                 >
                   {jobState.compliance_status}
@@ -592,39 +588,39 @@ export default function App() {
               {/* Dynamic stats breakdown */}
               <div className="lg:col-span-3 grid grid-cols-2 md:grid-cols-4 gap-6">
                 <div className="stat-card animate-fade-in-up" style={{ animationDelay: "0.05s" }}>
-                  <span className="text-white/50 text-xs font-bold uppercase tracking-wider">Crawled Pages</span>
+                  <span className="text-[#64748b] text-xs font-bold uppercase tracking-wider">Crawled Pages</span>
                   <div className="mt-4">
-                    <div className="text-3xl font-extrabold text-white">{jobState.pages_crawled}</div>
-                    <div className="text-[10px] text-white/40 mt-1 font-mono uppercase tracking-wider">100% Index Success</div>
+                    <div className="text-3xl font-extrabold text-[#1e293b]">{jobState.pages_crawled}</div>
+                    <div className="text-[10px] text-[#94a3b8] mt-1 font-mono uppercase tracking-wider">100% Index Success</div>
                   </div>
                 </div>
 
                 <div className="stat-card animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
-                  <span className="text-white/50 text-xs font-bold uppercase tracking-wider">Total DOM Nodes</span>
+                  <span className="text-[#64748b] text-xs font-bold uppercase tracking-wider">Total DOM Nodes</span>
                   <div className="mt-4">
-                    <div className="text-3xl font-extrabold text-white">{jobState.total_elements_analyzed}</div>
-                    <div className="text-[10px] text-white/40 mt-1 font-mono uppercase tracking-wider">Elements Audited</div>
+                    <div className="text-3xl font-extrabold text-[#1e293b]">{jobState.total_elements_analyzed}</div>
+                    <div className="text-[10px] text-[#94a3b8] mt-1 font-mono uppercase tracking-wider">Elements Audited</div>
                   </div>
                 </div>
 
                 <div className="stat-card animate-fade-in-up" style={{ animationDelay: "0.15s" }}>
-                  <span className="text-white/50 text-xs font-bold uppercase tracking-wider">Detector Highlights</span>
+                  <span className="text-[#64748b] text-xs font-bold uppercase tracking-wider">Detector Highlights</span>
                   <div className="mt-4">
-                    <div className="text-3xl font-extrabold text-red-400">{jobState.violations_found}</div>
-                    <div className="text-[10px] text-white/40 mt-1 font-mono uppercase tracking-wider">WCAG Violations</div>
+                    <div className="text-3xl font-extrabold text-red-600">{jobState.violations_found}</div>
+                    <div className="text-[10px] text-[#94a3b8] mt-1 font-mono uppercase tracking-wider">WCAG Violations</div>
                   </div>
                 </div>
 
                 <div className="stat-card animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-                  <span className="text-white/50 text-xs font-bold uppercase tracking-wider">UiPath Status</span>
+                  <span className="text-[#64748b] text-xs font-bold uppercase tracking-wider">UiPath Status</span>
                   <div className="mt-4">
                     <div className="flex items-center gap-1.5 mt-0.5">
                       <span className={`w-2 h-2 rounded-full ${jobState.status === "complete" ? "bg-emerald-500" : "bg-amber-500 animate-pulse"}`} />
-                      <span className={`text-xs font-bold uppercase tracking-wider ${jobState.status === "complete" ? "text-emerald-400" : "text-amber-400"}`}>
+                      <span className={`text-xs font-bold uppercase tracking-wider ${jobState.status === "complete" ? "text-emerald-600" : "text-amber-600"}`}>
                         {jobState.status === "complete" ? "APPROVED" : "REVIEW"}
                       </span>
                     </div>
-                    <div className="text-[10px] text-white/40 mt-1 leading-tight">
+                    <div className="text-[10px] text-[#94a3b8] mt-1 leading-tight">
                       {jobState.status === "complete" ? "Patches committed" : "Pending Maestro approval"}
                     </div>
                   </div>
@@ -633,7 +629,7 @@ export default function App() {
             </div>
 
             {/* Main Tabs Segment */}
-            <div className="border-b border-white/10 flex gap-4 animate-fade-in">
+            <div className="border-b border-slate-200/60 flex gap-4 animate-fade-in">
               <button
                 onClick={() => setActiveTab("violations")}
                 className={`py-3 px-1.5 text-sm font-semibold tracking-tight border-b-2 transition flex items-center gap-2 cursor-pointer ${
@@ -642,7 +638,7 @@ export default function App() {
                     : "tab-inactive"
                 }`}
               >
-                <AlertTriangle className="w-4 h-4 text-amber-400" />
+                <AlertTriangle className="w-4 h-4 text-amber-500" />
                 Detected WCAG Violations ({jobState.test_cases?.length || 0})
               </button>
 
@@ -654,7 +650,7 @@ export default function App() {
                     : "tab-inactive"
                 }`}
               >
-                <Cpu className="w-4 h-4 text-blue-400" />
+                <Cpu className="w-4 h-4 text-blue-500" />
                 AI Remediation Studio
               </button>
             </div>
@@ -665,9 +661,9 @@ export default function App() {
                 {/* Violations Left Table List */}
                 <div className="lg:col-span-12 space-y-4">
                   <div className="glass rounded-2xl overflow-hidden">
-                    <div className="p-5 bg-white/[0.03] border-b border-white/5 font-bold tracking-tight text-white/80 flex justify-between items-center text-sm">
+                    <div className="p-5 bg-slate-50/50 border-b border-slate-200/50 font-bold tracking-tight text-[#1e293b] flex justify-between items-center text-sm">
                       <span>Violations Register</span>
-                      <span className="text-xs font-mono font-medium text-white/40 uppercase">Interactive Remediation Queue</span>
+                      <span className="text-xs font-mono font-medium text-[#64748b] uppercase">Interactive Remediation Queue</span>
                     </div>
 
                     <div className="overflow-x-auto">
@@ -692,10 +688,10 @@ export default function App() {
                               className="cursor-pointer group"
                             >
                               <td>
-                                <span className="block font-bold text-white/80 group-hover:text-blue-400 transition-colors">
+                                <span className="block font-bold text-[#1e293b] group-hover:text-blue-600 transition-colors">
                                   WCAG {tc.wcag_criterion} ({tc.wcag_level})
                                 </span>
-                                <span className="text-[10px] text-white/40 font-mono italic block">{tc.principle}</span>
+                                <span className="text-[10px] text-[#64748b] font-mono italic block">{tc.principle}</span>
                               </td>
                               <td>{getSeverityBadge(tc.severity)}</td>
                               <td>
@@ -703,11 +699,11 @@ export default function App() {
                                   {tc.element}
                                 </code>
                               </td>
-                              <td className="text-xs text-white/60 max-w-sm truncate whitespace-normal leading-normal">
+                              <td className="text-xs text-[#475569] max-w-sm truncate whitespace-normal leading-normal">
                                 {tc.description}
                               </td>
                               <td className="text-xs">
-                                <span className="text-blue-400 font-semibold group-hover:underline inline-flex items-center gap-1">
+                                <span className="text-blue-600 font-semibold group-hover:underline inline-flex items-center gap-1">
                                   Open Studio
                                   <ArrowRight className="w-3 h-3" />
                                 </span>
@@ -727,7 +723,7 @@ export default function App() {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 animate-fade-in">
                 {/* Left panel element select list */}
                 <div className="lg:col-span-4 space-y-3">
-                  <span className="text-xs font-bold text-white/50 uppercase tracking-wider block mb-1">
+                  <span className="text-xs font-bold text-[#64748b] uppercase tracking-wider block mb-1">
                     Select Defect Reference
                   </span>
                   <div className="space-y-2 h-[480px] overflow-y-auto pr-1">
@@ -741,29 +737,29 @@ export default function App() {
                           onClick={() => setSelectedTestCase(tc)}
                           className={`p-4 rounded-xl border text-left transition cursor-pointer relative overflow-hidden ${
                             isSelected
-                              ? "glass border-blue-500/40 shadow-lg shadow-blue-500/10"
-                              : "glass-light border-white/5 hover:border-white/20"
+                              ? "glass border-blue-500/50 shadow-lg shadow-blue-500/10"
+                              : "glass-light hover:bg-white/60"
                           }`}
                         >
                           {/* Top Tag severity badge */}
                           <div className="flex justify-between items-center gap-2 mb-1.5">
-                            <span className="font-mono text-[10px] font-bold text-white/40">{tc.test_id}</span>
+                            <span className="font-mono text-[10px] font-bold text-[#64748b]">{tc.test_id}</span>
                             <div className="flex items-center gap-1.5 font-mono">
                               {isApproved ? (
-                                <span className="text-[9px] text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 rounded px-1.5 py-0.5 font-bold flex items-center gap-0.5 uppercase">
+                                <span className="text-[9px] text-emerald-600 bg-emerald-100 border border-emerald-300 rounded px-1.5 py-0.5 font-bold flex items-center gap-0.5 uppercase">
                                   <Check className="w-2.5 h-2.5" /> APPROVED
                                 </span>
                               ) : (
-                                <span className="text-[9px] text-white/40 bg-white/5 border border-white/10 rounded px-1.5 py-0.5 font-bold uppercase">PENDING</span>
+                                <span className="text-[9px] text-[#64748b] bg-slate-100 border border-slate-200 rounded px-1.5 py-0.5 font-bold uppercase">PENDING</span>
                               )}
                               <span>{getSeverityBadge(tc.severity)}</span>
                             </div>
                           </div>
 
-                          <h4 className="text-sm font-semibold text-white/80 leading-snug">
+                          <h4 className="text-sm font-semibold text-[#1e293b] leading-snug">
                             WCAG {tc.wcag_criterion} ({tc.wcag_level})
                           </h4>
-                          <p className="text-xs text-white/50 line-clamp-2 mt-1 leading-normal">
+                          <p className="text-xs text-[#64748b] line-clamp-2 mt-1 leading-normal">
                             {tc.description}
                           </p>
                         </div>
@@ -777,12 +773,12 @@ export default function App() {
                   {selectedTestCase ? (
                     <div className="glass p-6 space-y-6 animate-scale-in">
                       {/* Top Header metadata info */}
-                      <div className="flex justify-between items-start border-b border-white/10 pb-4">
+                      <div className="flex justify-between items-start border-b border-slate-200/60 pb-4">
                         <div>
-                          <h3 className="text-base font-bold text-white flex items-center gap-2">
+                          <h3 className="text-base font-bold text-[#1e293b] flex items-center gap-2">
                             WCAG Criterion {selectedTestCase.wcag_criterion} — {selectedTestCase.principle}
                           </h3>
-                          <p className="text-xs text-white/50 mt-1 flex items-center gap-1">
+                          <p className="text-xs text-[#64748b] mt-1 flex items-center gap-1">
                             Severity Standard: <span className="badge-critical px-1.5 py-0.5 rounded text-[10px] uppercase font-mono tracking-wider">{selectedTestCase.severity}</span>
                           </p>
                         </div>
@@ -793,7 +789,7 @@ export default function App() {
                           className={`px-4 py-2 rounded-xl text-xs font-semibold transition flex items-center gap-2 cursor-pointer ${
                             approvedPlans[selectedTestCase.test_id]
                               ? "bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-500/20"
-                              : "glass text-white/70 hover:text-white hover:bg-white/10"
+                              : "glass text-[#475569] hover:text-[#1e293b]"
                           }`}
                         >
                           <CheckCircle2 className="w-4 h-4" />
@@ -803,29 +799,29 @@ export default function App() {
 
                       {/* Side-by-Side Sandbox Comparison */}
                       <div className="space-y-4">
-                        <span className="text-xs font-bold text-white/50 uppercase tracking-wider block">
+                        <span className="text-xs font-bold text-[#64748b] uppercase tracking-wider block">
                           Element Correction Studio
                         </span>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           {/* Current Defect Node Code */}
                           <div className="space-y-2">
-                            <span className="text-xs font-semibold text-red-400 flex items-center gap-1.5 font-mono">
+                            <span className="text-xs font-semibold text-red-600 flex items-center gap-1.5 font-mono">
                               <span className="w-2 h-2 rounded-full bg-red-500" />
                               Original Failure Code
                             </span>
-                            <pre className="terminal-block p-4 text-[11px] font-mono whitespace-pre-wrap text-white/70 h-44 overflow-y-auto">
+                            <pre className="terminal-block p-4 text-[11px] font-mono whitespace-pre-wrap text-[#475569] h-44 overflow-y-auto">
                               {selectedTestCase.element}
                             </pre>
                           </div>
 
                           {/* Corrected Remediation Node Code */}
                           <div className="space-y-2">
-                            <span className="text-xs font-semibold text-emerald-400 flex items-center gap-1.5 font-mono">
+                            <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1.5 font-mono">
                               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                               Corrected Compliance Patch (Gemini Suggestion)
                             </span>
-                            <pre className="terminal-block p-4 text-[11px] font-mono whitespace-pre-wrap text-emerald-400 h-44 overflow-y-auto">
+                            <pre className="terminal-block p-4 text-[11px] font-mono whitespace-pre-wrap text-emerald-700 h-44 overflow-y-auto">
                               {selectedTestCase.code_fix}
                             </pre>
                           </div>
@@ -833,35 +829,35 @@ export default function App() {
                       </div>
 
                       {/* Remediation steps list */}
-                      <div className="p-5 bg-white/[0.03] border border-white/10 rounded-xl space-y-4">
-                        <h4 className="text-xs font-bold font-mono tracking-wider text-white/50 uppercase">
+                      <div className="p-5 bg-slate-50/50 border border-slate-200/50 rounded-xl space-y-4">
+                        <h4 className="text-xs font-bold font-mono tracking-wider text-[#64748b] uppercase">
                           Compliance Remediation Guidance
                         </h4>
-                        <p className="text-xs text-white/60 leading-relaxed">
+                        <p className="text-xs text-[#475569] leading-relaxed">
                           {selectedTestCase.remediation}
                         </p>
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-2 text-xs border-t border-white/10">
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-2 text-xs border-t border-slate-200/50">
                           <div>
-                            <span className="text-white/40 text-[10px] font-bold uppercase tracking-wider block">Fix Time Estimate</span>
-                            <span className="text-white/80 font-bold font-mono">~10 min</span>
+                            <span className="text-[#64748b] text-[10px] font-bold uppercase tracking-wider block">Fix Time Estimate</span>
+                            <span className="text-[#1e293b] font-bold font-mono">~10 min</span>
                           </div>
                           <div>
-                            <span className="text-white/40 text-[10px] font-bold uppercase tracking-wider block">WCAG Standard Pillar</span>
-                            <span className="text-white/80 font-bold font-mono">Standard Level {selectedTestCase.wcag_level}</span>
+                            <span className="text-[#64748b] text-[10px] font-bold uppercase tracking-wider block">WCAG Standard Pillar</span>
+                            <span className="text-[#1e293b] font-bold font-mono">Standard Level {selectedTestCase.wcag_level}</span>
                           </div>
                           <div>
-                            <span className="text-white/40 text-[10px] font-bold uppercase tracking-wider block">File Destination</span>
-                            <span className="text-white/80 font-bold font-mono">React Component Stack</span>
+                            <span className="text-[#64748b] text-[10px] font-bold uppercase tracking-wider block">File Destination</span>
+                            <span className="text-[#1e293b] font-bold font-mono">React Component Stack</span>
                           </div>
                         </div>
                       </div>
 
                       {/* Maestro Submit controls */}
                       {jobState.status !== "complete" && (
-                        <div className="flex justify-end pt-4 border-t border-white/10">
+                        <div className="flex justify-end pt-4 border-t border-slate-200/60">
                           <button
                             onClick={handleApproveFixes}
-                            className="btn-primary px-5 py-3 text-xs font-semibold tracking-wide flex items-center gap-2"
+                            className="btn-maestro px-5 py-3 text-xs font-semibold tracking-wide flex items-center gap-2"
                           >
                             <UserCheck className="w-4 h-4" />
                             COMMIT SIGNOFFS TO MAESTRO
@@ -870,7 +866,7 @@ export default function App() {
                       )}
                     </div>
                   ) : (
-                    <div className="h-64 flex items-center justify-center text-white/40 border border-white/10 border-dashed rounded-2xl glass">
+                    <div className="h-64 flex items-center justify-center text-[#64748b] border border-slate-200/60 border-dashed rounded-2xl glass">
                       Select any defect elements from the list to invoke element remediation.
                     </div>
                   )}
@@ -884,9 +880,9 @@ export default function App() {
       </main>
 
       {/* Elegant Footer area */}
-      <footer className="glass-footer py-12 text-center text-white/40 text-xs mt-16 max-w-full relative z-10">
+      <footer className="glass-footer py-12 text-center text-[#64748b] text-xs mt-16 max-w-full relative z-10">
         <p>&copy; 2026 AccessGuard. All rights reserved.</p>
-        <p className="mt-1 font-mono text-[10px] text-white/30">Autonomous WCAG 2.2 Compliance Engine — Powered by AI</p>
+        <p className="mt-1 font-mono text-[10px] text-[#94a3b8]">Autonomous WCAG 2.2 Compliance Engine — Powered by AI</p>
       </footer>
     </div>
   );
