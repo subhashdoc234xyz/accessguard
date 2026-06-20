@@ -22,8 +22,12 @@ import {
   UserCheck
 } from "lucide-react";
 import { ScanResult, TestCase } from "./types";
+import { useAuth } from "./contexts/AuthContext";
+import LoginPage from "./components/LoginPage";
+import UserMenu from "./components/UserMenu";
 
 export default function App() {
+  const { user, loading: authLoading } = useAuth();
   const [urlInput, setUrlInput] = useState("");
   const [currentJobId, setCurrentJobId] = useState<string | null>(null);
   const [jobState, setJobState] = useState<ScanResult | null>(null);
@@ -34,7 +38,7 @@ export default function App() {
   const [approvedPlans, setApprovedPlans] = useState<Record<string, boolean>>({});
   const [activeTab, setActiveTab] = useState<"violations" | "remediation">("violations");
 
-  // Poll job status while scan is running
+  // Poll job status while scan is running (must be before early returns for hooks consistency)
   useEffect(() => {
     if (!currentJobId || view !== "scanning") return;
 
@@ -67,6 +71,27 @@ export default function App() {
 
     return () => clearInterval(interval);
   }, [currentJobId, view]);
+
+  // Show loading spinner while Firebase checks auth state
+  if (authLoading) {
+    return (
+      <div className="min-h-screen font-sans flex items-center justify-center"
+        style={{ background: "linear-gradient(135deg, #e8f4fd 0%, #dbeafe 50%, #ede9fe 100%)" }}
+      >
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-500 flex items-center justify-center glow-blue">
+            <Shield className="w-8 h-8 text-white" />
+          </div>
+          <Loader2 className="w-6 h-6 text-blue-600 animate-spin" />
+        </div>
+      </div>
+    );
+  }
+
+  // Show login page if not authenticated
+  if (!user) {
+    return <LoginPage />;
+  }
 
   // Start Scan handler
   const handleStartScan = async (targetUrl: string) => {
@@ -273,6 +298,7 @@ export default function App() {
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               Systems Operational
             </div>
+            <UserMenu />
           </div>
         </div>
       </header>
