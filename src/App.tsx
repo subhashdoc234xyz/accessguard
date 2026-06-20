@@ -4,6 +4,7 @@
  */
 
 import { useState, useEffect } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { motion } from "motion/react";
 import {
   Globe,
@@ -24,10 +25,12 @@ import {
 import { ScanResult, TestCase } from "./types";
 import { useAuth } from "./contexts/AuthContext";
 import LoginPage from "./components/LoginPage";
+import RegisterForm from "./components/auth/RegisterForm";
+import ForgotPassword from "./components/auth/ForgotPassword";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
 import UserMenu from "./components/UserMenu";
 
-export default function App() {
-  const { user, loading: authLoading } = useAuth();
+function MainApp() {
   const [urlInput, setUrlInput] = useState("");
   const [currentJobId, setCurrentJobId] = useState<string | null>(null);
   const [jobState, setJobState] = useState<ScanResult | null>(null);
@@ -38,7 +41,7 @@ export default function App() {
   const [approvedPlans, setApprovedPlans] = useState<Record<string, boolean>>({});
   const [activeTab, setActiveTab] = useState<"violations" | "remediation">("violations");
 
-  // Poll job status while scan is running (must be before early returns for hooks consistency)
+  // Poll job status while scan is running
   useEffect(() => {
     if (!currentJobId || view !== "scanning") return;
 
@@ -49,7 +52,6 @@ export default function App() {
         const data: ScanResult = await response.json();
         setJobState(data);
 
-        // Transition from scanning to dashboard once results are awaiting review or complete
         if (data.status === "awaiting_approval" || data.status === "complete") {
           setView("dashboard");
           if (data.test_cases?.length > 0) {
@@ -72,34 +74,12 @@ export default function App() {
     return () => clearInterval(interval);
   }, [currentJobId, view]);
 
-  // Show loading spinner while Firebase checks auth state
-  if (authLoading) {
-    return (
-      <div className="min-h-screen font-sans flex items-center justify-center"
-        style={{ background: "linear-gradient(135deg, #e8f4fd 0%, #dbeafe 50%, #ede9fe 100%)" }}
-      >
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-500 flex items-center justify-center glow-blue">
-            <Shield className="w-8 h-8 text-white" />
-          </div>
-          <Loader2 className="w-6 h-6 text-blue-600 animate-spin" />
-        </div>
-      </div>
-    );
-  }
-
-  // Show login page if not authenticated
-  if (!user) {
-    return <LoginPage />;
-  }
-
   // Start Scan handler
   const handleStartScan = async (targetUrl: string) => {
     if (!targetUrl) return;
     setLoading(true);
     setErrorText(null);
 
-    // Auto prepend https if user omits
     let formattedUrl = targetUrl.trim();
     if (!/^https?:\/\//i.test(formattedUrl)) {
       formattedUrl = "https://" + formattedUrl;
@@ -137,7 +117,6 @@ export default function App() {
   };
 
   async function saveFileViaPicker(content: string, suggestedName: string, mimeType: string) {
-    // Try the modern File System Access API first
     if ("showSaveFilePicker" in window) {
       try {
         const fileHandle = await (window as unknown as { showSaveFilePicker: (opts: any) => Promise<any> }).showSaveFilePicker({
@@ -154,12 +133,10 @@ export default function App() {
         await writable.close();
         return;
       } catch (err: any) {
-        // User cancelled or API not available — fall through
         if (err.name === "AbortError" || err.name === "SecurityError") return;
       }
     }
 
-    // Fallback: create a temporary anchor element
     const blob = new Blob([content], { type: mimeType });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -213,7 +190,6 @@ export default function App() {
             .map((tc) => `- **${tc.test_id} (${tc.wcag_criterion})**: ${tc.remediation}`)
             .join("\n") + "\n";
 
-    // Auto-generate a 2-sentence conclusion
     const statusLabel = wcag_score >= 90 ? "complies with" : wcag_score >= 70 ? "partially complies with" : "does not comply with";
     const conclusion = `AccessGuard scanned ${url} on ${new Date(created_at).toLocaleString()}. The site ${statusLabel} WCAG 2.2 standards with a score of ${wcag_score}/100 (${compliance_status}), identifying ${violations_found} violations across ${pages_crawled} crawled pages.`;
 
@@ -227,13 +203,11 @@ export default function App() {
     await saveFileViaPicker(md, `AccessGuard_Report_${hostname}.md`, "text/markdown");
   };
 
-  // Human-in-the-loop Remediation Fix Approver
   const handleApproveFixes = async () => {
     if (!currentJobId) return;
     setLoading(true);
 
     try {
-      // Collect approved plans
       const approvals = Object.keys(approvedPlans).filter((key) => approvedPlans[key]);
 
       const response = await fetch(`/api/approve/${currentJobId}`, {
@@ -253,7 +227,6 @@ export default function App() {
     }
   };
 
-  // Toggle Single Remediations
   const toggleRemediationApproval = (testId: string) => {
     setApprovedPlans((prev) => ({
       ...prev,
@@ -364,10 +337,7 @@ export default function App() {
                   </button>
                 </div>
               </div>
-
             </div>
-
-
           </motion.div>
         )}
 
@@ -432,7 +402,6 @@ export default function App() {
                   let descStyle = "text-[#64748b]";
 
                   if (elementIndex < currentIndex) {
-                    // Completed Step
                     statusIcon = (
                       <div className="w-6 h-6 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-600 flex items-center justify-center flex-shrink-0 shadow-sm">
                         <CheckCircle2 className="w-4 h-4" />
@@ -441,7 +410,6 @@ export default function App() {
                     textStyle = "text-[#475569]";
                     descStyle = "text-[#64748b]";
                   } else if (elementIndex === currentIndex) {
-                    // Active Step
                     statusIcon = (
                       <div className="w-6 h-6 rounded-full bg-blue-100 border border-blue-300 text-blue-600 flex items-center justify-center flex-shrink-0 animate-pulse shadow-sm">
                         <Loader2 className="w-4 h-4 animate-spin" />
@@ -572,9 +540,7 @@ export default function App() {
                 {/* Donut SVG */}
                 <div className="relative w-36 h-36 flex items-center justify-center">
                   <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                    {/* Background */}
                     <circle cx="50" cy="50" r="40" className="score-track" strokeWidth="8" fill="transparent" />
-                    {/* Score fill */}
                     <circle
                       cx="50"
                       cy="50"
@@ -684,7 +650,6 @@ export default function App() {
             {/* TAB CONTENT: DETECTED VIOLATIONS */}
             {activeTab === "violations" && (
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 animate-fade-in">
-                {/* Violations Left Table List */}
                 <div className="lg:col-span-12 space-y-4">
                   <div className="glass rounded-2xl overflow-hidden">
                     <div className="p-5 bg-slate-50/50 border-b border-slate-200/50 font-bold tracking-tight text-[#1e293b] flex justify-between items-center text-sm">
@@ -747,7 +712,6 @@ export default function App() {
             {/* TAB CONTENT: REMEDIATION STUDIO */}
             {activeTab === "remediation" && (
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 animate-fade-in">
-                {/* Left panel element select list */}
                 <div className="lg:col-span-4 space-y-3">
                   <span className="text-xs font-bold text-[#64748b] uppercase tracking-wider block mb-1">
                     Select Defect Reference
@@ -767,7 +731,6 @@ export default function App() {
                               : "glass-light hover:bg-white/60"
                           }`}
                         >
-                          {/* Top Tag severity badge */}
                           <div className="flex justify-between items-center gap-2 mb-1.5">
                             <span className="font-mono text-[10px] font-bold text-[#64748b]">{tc.test_id}</span>
                             <div className="flex items-center gap-1.5 font-mono">
@@ -794,11 +757,9 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Right sandbox panel */}
                 <div className="lg:col-span-8 space-y-6">
                   {selectedTestCase ? (
                     <div className="glass p-6 space-y-6 animate-scale-in">
-                      {/* Top Header metadata info */}
                       <div className="flex justify-between items-start border-b border-slate-200/60 pb-4">
                         <div>
                           <h3 className="text-base font-bold text-[#1e293b] flex items-center gap-2">
@@ -809,7 +770,6 @@ export default function App() {
                           </p>
                         </div>
 
-                        {/* Maestro approval checkboxes */}
                         <button
                           onClick={() => toggleRemediationApproval(selectedTestCase.test_id)}
                           className={`px-4 py-2 rounded-xl text-xs font-semibold transition flex items-center gap-2 cursor-pointer ${
@@ -823,14 +783,12 @@ export default function App() {
                         </button>
                       </div>
 
-                      {/* Side-by-Side Sandbox Comparison */}
                       <div className="space-y-4">
                         <span className="text-xs font-bold text-[#64748b] uppercase tracking-wider block">
                           Element Correction Studio
                         </span>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          {/* Current Defect Node Code */}
                           <div className="space-y-2">
                             <span className="text-xs font-semibold text-red-600 flex items-center gap-1.5 font-mono">
                               <span className="w-2 h-2 rounded-full bg-red-500" />
@@ -841,7 +799,6 @@ export default function App() {
                             </pre>
                           </div>
 
-                          {/* Corrected Remediation Node Code */}
                           <div className="space-y-2">
                             <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1.5 font-mono">
                               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
@@ -854,7 +811,6 @@ export default function App() {
                         </div>
                       </div>
 
-                      {/* Remediation steps list */}
                       <div className="p-5 bg-slate-50/50 border border-slate-200/50 rounded-xl space-y-4">
                         <h4 className="text-xs font-bold font-mono tracking-wider text-[#64748b] uppercase">
                           Compliance Remediation Guidance
@@ -878,7 +834,6 @@ export default function App() {
                         </div>
                       </div>
 
-                      {/* Maestro Submit controls */}
                       {jobState.status !== "complete" && (
                         <div className="flex justify-end pt-4 border-t border-slate-200/60">
                           <button
@@ -899,8 +854,6 @@ export default function App() {
                 </div>
               </div>
             )}
-
-
           </motion.div>
         )}
       </main>
@@ -911,5 +864,45 @@ export default function App() {
         <p className="mt-1 font-mono text-[10px] text-[#94a3b8]">Autonomous WCAG 2.2 Compliance Engine — Powered by AI</p>
       </footer>
     </div>
+  );
+}
+
+export default function App() {
+  const { user, loading } = useAuth();
+
+  // Show global loading spinner while auth state resolves
+  if (loading) {
+    return (
+      <div
+        className="min-h-screen font-sans flex items-center justify-center"
+        style={{ background: "linear-gradient(135deg, #e8f4fd 0%, #dbeafe 50%, #ede9fe 100%)" }}
+      >
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-500 flex items-center justify-center glow-blue">
+            <Shield className="w-8 h-8 text-white" />
+          </div>
+          <Loader2 className="w-6 h-6 text-blue-600 animate-spin" />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <Routes>
+      {/* Redirect authenticated users away from auth pages */}
+      <Route path="/login" element={user ? <Navigate to="/" replace /> : <LoginPage />} />
+      <Route path="/register" element={user ? <Navigate to="/" replace /> : <RegisterForm />} />
+      <Route path="/forgot-password" element={user ? <Navigate to="/" replace /> : <ForgotPassword />} />
+
+      {/* Protected main app */}
+      <Route
+        path="/*"
+        element={
+          <ProtectedRoute>
+            <MainApp />
+          </ProtectedRoute>
+        }
+      />
+    </Routes>
   );
 }

@@ -471,6 +471,42 @@ body {
   overflow: auto;
 }
 
+/* ---- Auth Password Strength ---- */
+.password-strength-bar {
+  transition: width 0.3s ease, background 0.3s ease;
+}
+
+/* ---- Auth Link Animations ---- */
+.auth-link {
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.auth-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background: #3b82f6;
+  transition: width 0.2s ease;
+}
+
+.auth-link:hover::after {
+  width: 100%;
+}
+
+/* ---- Auth Card Form Animation ---- */
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.auth-form-enter {
+  animation: slideUpFade 0.4s ease forwards;
+}
+
 /* ---- Footer ---- */
 .glass-footer {
   border-top: 1px solid rgba(255, 255, 255, 0.7);

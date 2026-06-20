@@ -1,34 +1,107 @@
 import { useState, type FormEvent } from "react";
 import { motion } from "motion/react";
-import { Shield, Loader2, AlertTriangle, Eye, EyeOff, Mail, Lock } from "lucide-react";
-import { Link } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
+import { Shield, Loader2, AlertTriangle, Eye, EyeOff, Mail, Lock, User, Check, X } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 
-export default function LoginPage() {
-  const { login, loginWithGoogle, loginWithGithub } = useAuth();
+function PasswordStrength({ password }: { password: string }) {
+  const checks = [
+    { label: "At least 8 characters", test: password.length >= 8 },
+    { label: "Contains uppercase", test: /[A-Z]/.test(password) },
+    { label: "Contains lowercase", test: /[a-z]/.test(password) },
+    { label: "Contains a number", test: /\d/.test(password) },
+    { label: "Contains a symbol", test: /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password) },
+  ];
+
+  const strength = checks.filter((c) => c.test).length;
+  const percentage = (strength / checks.length) * 100;
+
+  const barColor =
+    percentage <= 20
+      ? "#ef4444"
+      : percentage <= 40
+      ? "#f97316"
+      : percentage <= 60
+      ? "#eab308"
+      : percentage <= 80
+      ? "#22c55e"
+      : "#10b981";
+
+  const label =
+    percentage <= 20 ? "Very Weak" : percentage <= 40 ? "Weak" : percentage <= 60 ? "Fair" : percentage <= 80 ? "Strong" : "Very Strong";
+
+  if (!password) return null;
+
+  return (
+    <div className="space-y-2 mt-3">
+      <div className="flex items-center justify-between">
+        <div className="flex-1 h-1.5 rounded-full bg-slate-200/60 overflow-hidden">
+          <div
+            className="h-full rounded-full transition-all duration-300"
+            style={{ width: `${percentage}%`, background: barColor }}
+          />
+        </div>
+        <span className="text-[10px] font-semibold ml-3" style={{ color: barColor }}>
+          {label}
+        </span>
+      </div>
+      <div className="grid grid-cols-1 gap-1">
+        {checks.map((check, i) => (
+          <div key={i} className="flex items-center gap-2 text-[11px]">
+            {check.test ? (
+              <Check className="w-3 h-3 text-emerald-500 flex-shrink-0" />
+            ) : (
+              <X className="w-3 h-3 text-[#94a3b8] flex-shrink-0" />
+            )}
+            <span className={check.test ? "text-emerald-600" : "text-[#94a3b8]"}>{check.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function RegisterForm() {
+  const { register, loginWithGoogle, loginWithGithub } = useAuth();
+  const navigate = useNavigate();
+
+  const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState<"email" | "google" | "github" | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const handleEmailLogin = async (e: FormEvent<HTMLFormElement>) => {
+  const handleEmailRegister = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!email || !password) return;
+    if (!displayName || !email || !password || !confirmPassword) return;
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters.");
+      return;
+    }
+
     setLoading("email");
     setError(null);
     try {
-      await login(email, password);
+      await register(email, password, displayName);
+      navigate("/");
     } catch (err: any) {
       const code = err.code;
-      if (code === "auth/user-not-found" || code === "auth/wrong-password" || code === "auth/invalid-credential") {
-        setError("Invalid email or password. Please try again.");
+      if (code === "auth/email-already-in-use") {
+        setError("This email is already registered. Try signing in instead.");
       } else if (code === "auth/invalid-email") {
         setError("Please enter a valid email address.");
-      } else if (code === "auth/too-many-requests") {
-        setError("Too many attempts. Please try again later.");
+      } else if (code === "auth/weak-password") {
+        setError("Password is too weak. Please use a stronger password.");
       } else {
-        setError(err.message || "Sign-in failed. Please try again.");
+        setError(err.message || "Registration failed. Please try again.");
       }
     } finally {
       setLoading(null);
@@ -40,9 +113,10 @@ export default function LoginPage() {
     setError(null);
     try {
       await loginWithGoogle();
+      navigate("/");
     } catch (err: any) {
       if (err.code !== "auth/popup-closed-by-user") {
-        setError(err.message || "Google sign-in failed. Please try again.");
+        setError(err.message || "Google sign-in failed.");
       }
     } finally {
       setLoading(null);
@@ -54,9 +128,10 @@ export default function LoginPage() {
     setError(null);
     try {
       await loginWithGithub();
+      navigate("/");
     } catch (err: any) {
       if (err.code !== "auth/popup-closed-by-user") {
-        setError(err.message || "GitHub sign-in failed. Please try again.");
+        setError(err.message || "GitHub sign-in failed.");
       }
     } finally {
       setLoading(null);
@@ -65,7 +140,6 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen font-sans relative overflow-hidden flex items-center justify-center p-4">
-      {/* Floating Orbs */}
       <div className="orb orb-1" />
       <div className="orb orb-2" />
       <div className="orb orb-3" />
@@ -94,10 +168,9 @@ export default function LoginPage() {
           <p className="text-sm text-[#64748b] mt-1">Accessibility Compliance Platform</p>
         </div>
 
-        {/* Heading */}
-        <h2 className="text-lg font-semibold text-[#1e293b] text-center">Welcome back</h2>
+        <h2 className="text-lg font-semibold text-[#1e293b] text-center">Create your account</h2>
         <p className="text-sm text-[#64748b] text-center mt-1 mb-6">
-          Sign in to scan and audit web accessibility
+          Start scanning web accessibility with AI
         </p>
 
         {/* Error Message */}
@@ -118,8 +191,41 @@ export default function LoginPage() {
           </motion.div>
         )}
 
-        {/* Email/Password Form */}
-        <form onSubmit={handleEmailLogin} className="space-y-4">
+        {/* Registration Form */}
+        <form onSubmit={handleEmailRegister} className="space-y-4">
+          {/* Full Name */}
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold text-[#475569] tracking-tight">Full Name</label>
+            <div
+              className="flex items-center gap-3 px-4 transition-all duration-200"
+              style={{
+                background: "rgba(255, 255, 255, 0.7)",
+                border: "1px solid rgba(148, 163, 184, 0.3)",
+                borderRadius: "12px",
+                height: "48px",
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.borderColor = "#3b82f6";
+                e.currentTarget.style.boxShadow = "0 0 0 3px rgba(59, 130, 246, 0.15)";
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.borderColor = "rgba(148, 163, 184, 0.3)";
+                e.currentTarget.style.boxShadow = "none";
+              }}
+            >
+              <User className="w-4 h-4 text-[#94a3b8] flex-shrink-0" />
+              <input
+                type="text"
+                placeholder="John Doe"
+                className="bg-transparent border-none outline-none text-sm text-[#1e293b] placeholder-[#94a3b8] w-full"
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
+          {/* Email */}
           <div className="space-y-1.5">
             <label className="text-xs font-semibold text-[#475569] tracking-tight">Email</label>
             <div
@@ -151,16 +257,9 @@ export default function LoginPage() {
             </div>
           </div>
 
+          {/* Password */}
           <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <label className="text-xs font-semibold text-[#475569] tracking-tight">Password</label>
-              <Link
-                to="/forgot-password"
-                className="text-xs font-medium text-blue-600 hover:text-blue-500 transition-colors"
-              >
-                Forgot?
-              </Link>
-            </div>
+            <label className="text-xs font-semibold text-[#475569] tracking-tight">Password</label>
             <div
               className="flex items-center gap-3 px-4 transition-all duration-200"
               style={{
@@ -181,11 +280,12 @@ export default function LoginPage() {
               <Lock className="w-4 h-4 text-[#94a3b8] flex-shrink-0" />
               <input
                 type={showPassword ? "text" : "password"}
-                placeholder="Enter your password"
+                placeholder="Create a strong password"
                 className="bg-transparent border-none outline-none text-sm text-[#1e293b] placeholder-[#94a3b8] w-full"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                minLength={8}
               />
               <button
                 type="button"
@@ -196,20 +296,63 @@ export default function LoginPage() {
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
+            <PasswordStrength password={password} />
+          </div>
+
+          {/* Confirm Password */}
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold text-[#475569] tracking-tight">Confirm Password</label>
+            <div
+              className="flex items-center gap-3 px-4 transition-all duration-200"
+              style={{
+                background: "rgba(255, 255, 255, 0.7)",
+                border: "1px solid rgba(148, 163, 184, 0.3)",
+                borderRadius: "12px",
+                height: "48px",
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.borderColor = "#3b82f6";
+                e.currentTarget.style.boxShadow = "0 0 0 3px rgba(59, 130, 246, 0.15)";
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.borderColor = "rgba(148, 163, 184, 0.3)";
+                e.currentTarget.style.boxShadow = "none";
+              }}
+            >
+              <Lock className="w-4 h-4 text-[#94a3b8] flex-shrink-0" />
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Repeat your password"
+                className="bg-transparent border-none outline-none text-sm text-[#1e293b] placeholder-[#94a3b8] w-full"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              />
+            </div>
+            {confirmPassword && password !== confirmPassword && (
+              <p className="text-[11px] text-red-500 flex items-center gap-1 mt-1">
+                <X className="w-3 h-3" /> Passwords do not match
+              </p>
+            )}
+            {confirmPassword && password === confirmPassword && (
+              <p className="text-[11px] text-emerald-600 flex items-center gap-1 mt-1">
+                <Check className="w-3 h-3" /> Passwords match
+              </p>
+            )}
           </div>
 
           <button
             type="submit"
-            disabled={loading !== null || !email || !password}
+            disabled={loading !== null || !displayName || !email || !password || !confirmPassword || password !== confirmPassword}
             className="btn-primary w-full h-[48px] text-sm tracking-wide flex items-center justify-center gap-2"
           >
             {loading === "email" ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                Signing in...
+                Creating account...
               </>
             ) : (
-              "Sign In"
+              "Create Account"
             )}
           </button>
         </form>
@@ -282,11 +425,11 @@ export default function LoginPage() {
           {loading === "github" ? "Signing in..." : "Continue with GitHub"}
         </button>
 
-        {/* Register Link */}
+        {/* Login Link */}
         <p className="text-xs text-[#64748b] text-center mt-6">
-          Don't have an account?{" "}
-          <Link to="/register" className="text-blue-600 font-semibold hover:text-blue-500 transition-colors">
-            Create one
+          Already have an account?{" "}
+          <Link to="/login" className="text-blue-600 font-semibold hover:text-blue-500 transition-colors">
+            Sign in
           </Link>
         </p>
       </motion.div>
