@@ -1,0 +1,6 @@
+{
+  "name": "AccessGuard",
+  "description": "Agentic accessibility testing system utilizing Gemini 2.5 Flash and UiPath Test Cloud integrations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
